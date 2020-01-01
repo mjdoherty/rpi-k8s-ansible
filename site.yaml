@@ -1,0 +1,13 @@
+---
+- hosts: all
+  roles:
+   - common
+
+- hosts: master
+  roles:
+    - master
+
+- hosts: all:!master
+  roles:
+    - workers
+

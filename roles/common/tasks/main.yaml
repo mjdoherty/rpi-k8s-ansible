@@ -1,0 +1,22 @@
+---
+# Tasks for common node setup
+
+- name: Check if docker is installed
+  stat:
+    path: /usr/bin/docker
+  register: docker_needed
+  ignore_errors: True
+
+#- name: Copy get-docker.sh if docker is not installed
+#  copy:
+#    src: files/get-docker.sh
+#    dest: get-docker.sh
+#    owner: pi
+#    group: pi
+#    mode: u+rx, g+rx
+#  when: docker_needed.stat.exists == False
+
+- name: Install docker if not installed
+  script: "files/get-docker.sh {{ docker_ce_version }}"
+  when: docker_needed.stat.exists == False
+  register: docker_installed
