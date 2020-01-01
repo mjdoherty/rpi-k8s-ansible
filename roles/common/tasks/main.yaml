@@ -7,16 +7,53 @@
   register: docker_needed
   ignore_errors: True
 
-#- name: Copy get-docker.sh if docker is not installed
-#  copy:
-#    src: files/get-docker.sh
-#    dest: get-docker.sh
-#    owner: pi
-#    group: pi
-#    mode: u+rx, g+rx
-#  when: docker_needed.stat.exists == False
-
 - name: Install docker if not installed
   script: "files/get-docker.sh {{ docker_ce_version }}"
   when: docker_needed.stat.exists == False
   register: docker_installed
+
+- name: Disable swap filesystem
+  shell: /sbin/dphys-swapfile swapoff && /sbin/dphys-swapfile uninstall && update-rc.d dphys-swapfile remove
+  ignore_errors: True
+
+- name: Enable cgroup options at boot
+  copy:
+    src: cmdline.txt
+    dest: /boot/cmdline.txt
+    owner: root
+    group: root
+    mode: 0755
+  register: cmdline
+
+- name: apt-get update
+  apt:
+    update_cache: yes
+    autoclean: yes
+    autoremove: yes
+    cache_valid_time: 86400
+
+- name: apt-get upgrade
+  apt:
+    upgrade: full
+
+- name: python-apt dependency
+  shell: apt-get install -y python-apt
+  args:
+    warn: no
+
+- name: Reboot
+  shell: sleep 2 && shutdown -r now "Ansible Reboot"
+  async: 1
+  poll: 0
+  ignore_errors: True
+  when: cmdline or timezone or hostname is changed
+
+- name: Wait for Reboot
+  local_action: wait_for
+  args:
+    host: "{{ inventory_hostname }}"
+    port: 22
+    delay: 15
+    timeout: 120
+  become: False
+
