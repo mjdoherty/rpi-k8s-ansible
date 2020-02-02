@@ -42,18 +42,7 @@
     warn: no
 
 - name: Reboot
-  shell: sleep 2 && shutdown -r now "Ansible Reboot"
-  async: 1
-  poll: 0
-  ignore_errors: True
-  when: cmdline or timezone or hostname is changed
+  reboot:
+    reboot_timeout: 3600
 
-- name: Wait for Reboot
-  local_action: wait_for
-  args:
-    host: "{{ inventory_hostname }}"
-    port: 22
-    delay: 15
-    timeout: 120
-  become: False
-
+- include_tasks: kubernetes.yaml

@@ -37,7 +37,9 @@ rpi-k8s-01  ansible_host=192.168.1.36  ansible_user=pi
 [workers]
 rpi-k8s-02  ansible_host=192.168.1.33  ansible_user=pi
 rpi-k8s-03  ansible_host=192.168.1.38  ansible_user=pi
+
 ```
+ansible -i inventory all -m ping
 
 # Running ansible playbook
 
