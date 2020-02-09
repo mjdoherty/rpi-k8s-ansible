@@ -13,8 +13,10 @@
   register: docker_installed
 
 - name: Disable swap filesystem
-  shell: /sbin/dphys-swapfile swapoff && /sbin/dphys-swapfile uninstall && update-rc.d dphys-swapfile remove
-  ignore_errors: True
+  lineinfile:
+    path: /etc/dphys-swapfile
+    regexp: '^CONF_SWAPSIZE='
+    line: CONF_SWAPSIZE=0
 
 - name: Enable cgroup options at boot
   copy:
@@ -44,5 +46,3 @@
 - name: Reboot
   reboot:
     reboot_timeout: 3600
-
-- include_tasks: kubernetes.yaml

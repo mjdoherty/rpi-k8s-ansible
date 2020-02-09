@@ -1,5 +1,5 @@
 ---
-# Tasks for common kubernetes setup
+# Tasks for kubernetes setup
 
 - name: Download google apt-key
   apt_key:
@@ -31,6 +31,7 @@
   lineinfile:
     path: /etc/default/kubelet
     line: KUBELET_EXTRA_ARGS=--node-ip={{ node_ip }}
+  when: false
 
 - name: Restart kubelet
   service:
