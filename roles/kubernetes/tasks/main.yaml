@@ -1,6 +1,12 @@
 ---
 # Tasks for kubernetes setup
 
+- name: Pass bridged IPv4 traffic to iptables' chains
+  sysctl:
+    name: net.bridge.bridge-nf-call-iptables
+    value: 1
+    state: present
+
 - name: Download google apt-key
   apt_key:
     url: https://packages.cloud.google.com/apt/doc/apt-key.gpg

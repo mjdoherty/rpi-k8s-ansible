@@ -1,3 +1,5 @@
 # Docker version
 docker_ce_version: "18.06.2~ce~3-0~raspbian"
 
+# Kubernetes pod network cidr
+kubeadm_cidr: 10.0.0.0/16
