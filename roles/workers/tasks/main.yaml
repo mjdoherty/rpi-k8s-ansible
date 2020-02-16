@@ -1,14 +1,26 @@
 ---
 
+- name: Kubernetes reset
+  shell: kubeadm reset -f
+  register: kubeadm_reset
+
+- name: Create Kubernetes config directory
+  file:
+    path: /root/.kube/
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Copy kubeconfig from host machine to config directory
+  copy:
+    src:  /tmp/kubeconfig
+    dest: /root/.kube/config
+
 - name: Kubernetes join cluster
   shell: >
-    kubeadm join
+    kubeadm join --discovery-file /root/.kube/config
     --ignore-preflight-errors=all
-    --token {{ hostvars[groups['master'][0]]['ansible_facts']['kubeadm_token'] }}
-    {{ groups['master'][0] }}:6643
-    --discovery-token-unsafe-skip-ca-verification
-    #--discovery-token-ca-cert-hash
-    #sha256:{{ hostvars[groups['master'][0]]['ansible_facts']['kubeadm_x509_token'] }}
   register: kubeadm_join
 
 - name: Restart Kubelet
@@ -17,10 +29,11 @@
     state: restarted
     daemon_reload: yes
     enabled: yes
+  when: kubeadm_join is succeeded
   register: kubelet_restarted
 
 - name: Kubernetes get nodes
   shell: kubectl get nodes
   register: kubectl_get_nodes
-  when: kubeadm_join is succeeded
+  when: kubelet_restarted is succeeded
 

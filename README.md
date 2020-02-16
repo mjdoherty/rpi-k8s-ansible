@@ -51,3 +51,8 @@ RaspberryPi Ansible Setup
     ansible-playbook -i inventory -v site.yaml
 ```
 
+# Restarting the playbook after a failed task
+```
+    ansible-playbook -i inventory -v site.yaml --start-at-task="Kubernetes join cluster"
+```
+

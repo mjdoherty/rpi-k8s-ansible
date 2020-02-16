@@ -44,8 +44,14 @@
     group: root
     mode: 0755
     remote_src: yes
-    backup: yes
+    backup: no
   when: kubeadm_init is succeeded
+
+- name: Copy kubeconfig to host machine
+  fetch:
+    src:  /root/.kube/config
+    dest: /tmp/kubeconfig
+    flat: yes
 
 - name: Extract x509 token
   shell: |
