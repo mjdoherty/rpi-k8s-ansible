@@ -28,6 +28,24 @@ RaspberryPi Ansible Setup
         -> Network Options -> Hostname
 ```
 
+# Configure passwordless SSH access to each raspberry pi
+
+On the host machine generate ssh keys, do not enter a password 
+when prompted
+
+```
+    ssh-keygen
+```
+
+Now copy these keys to each raspberry pi so that ansible can
+access nodes without credentials
+
+```
+    ssh-copy-id pi@rpi-k8s-01
+    ssh-copy-id pi@rpi-k8s-02
+    ssh-copy-id pi@rpi-k8s-03
+```
+
 # Configure ansible inventory
 
 ```
