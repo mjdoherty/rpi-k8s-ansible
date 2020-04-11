@@ -74,3 +74,12 @@ access nodes without credentials
     ansible-playbook -i inventory -v site.yaml --start-at-task="Kubernetes join cluster"
 ```
 
+# Copy the kubernetes config into the correct location on the host to access the cluster with kubectl
+```
+    cp /tmp/kubeconfig $HOME/.kube/config
+    kubectl get nodes
+    NAME         STATUS   ROLES    AGE   VERSION
+    rpi-k8s-01   Ready    master   23m   v1.18.1
+    rpi-k8s-02   Ready    <none>   22m   v1.18.1
+    rpi-k8s-03   Ready    <none>   22m   v1.18.1
+```
