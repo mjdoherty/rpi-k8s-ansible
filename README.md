@@ -1,9 +1,17 @@
 # rpi-k8s-ansible
 RaspberryPi Ansible Setup
 
+## Notes
+
+The version of raspian lite used for this kubernetes installation
+was 2019-09-26-raspbian-buster-lite.
+
+It has been tested using later versions of raspbian and the boot sequence
+hangs after usb setup - so some issues to triage.
+
 ## Raspberry Pi headless mode setup
 
-* Raspbian installed on SD cards
+* Raspbian installed on SD cards (see INSTALL.md)
 * Add empty ssh to root directory to allow ssh connectivity
 * Add wpa_supplicant.conf to /boot to configure wifi
 ```
